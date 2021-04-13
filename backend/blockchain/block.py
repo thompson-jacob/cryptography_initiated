@@ -7,7 +7,7 @@ GENESIS_DATA = {
   'last_hash': 'genesis_last_hash',
   'hash': 'genesis_hash',
   'data': [], 
-  'difficulty': 3,
+  'difficulty': 5,
   'nonce': 'genesis_nonce',
 }
 class Block: 
@@ -49,6 +49,9 @@ class Block:
     hash = crypto_hash(timestamp, last_hash, data, difficulty, nonce)
 
     while hash[0:difficulty] != '0' * difficulty:
+      nonce += 1
+      timestamp = time.time_ns()
+      hash = crypto_hash(timestamp, last_hash, data, difficulty, nonce)
 
 
     return Block(timestamp, last_hash, hash, data, difficulty, nonce)

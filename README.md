@@ -16,7 +16,7 @@ pip3 install -r requirements.txt
 **Make sure to test**
 
 Activate the virtual environment and run pytest using
-
+# this will run all tests in the tests folder
 ```
 python3 -m pytest backend/tests
 ```
