@@ -6,5 +6,3 @@ SECONDS = 1000 * MILLISECONDS
 MINE_RATE = 4 * SECONDS
 
 
-subscriber_key = 'sub-c-5f9f2784-a333-11eb-b041-f285796cd270'
-publisher_key = 'pub-c-c12b5e27-05fe-4233-b36a-3d69c16afe91'
