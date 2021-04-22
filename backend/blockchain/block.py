@@ -1,13 +1,15 @@
 import time
 
 from backend.util.crypto_hash import crypto_hash
+from backend.util.hex_to_binary import hex_to_binary
+from backend.config import MINE_RATE
 
 GENESIS_DATA = {
   'timestamp': 1,
   'last_hash': 'genesis_last_hash',
   'hash': 'genesis_hash',
   'data': [], 
-  'difficulty': 5,
+  'difficulty': 3,
   'nonce': 'genesis_nonce',
 }
 class Block: 
@@ -33,8 +35,17 @@ class Block:
       f'Block - data: {self.data},'
       f'difficulty: {self.difficulty},'
       f'nonce: {self.nonce})'
-
     )
+
+  def __eq__(self, other):
+    return self.__dict__ == other.__dict__
+
+  def to_json(self):
+    """
+    Goal of to_json is to serialize the block into a dictionary representation
+    """
+    return self.__dict__
+
 
   @staticmethod
   def mine_block(last_block, data):
@@ -44,13 +55,14 @@ class Block:
     """
     timestamp = time.time_ns()
     last_hash = last_block.hash
-    difficulty = last_block.difficulty
+    difficulty = Block.adjust_difficulty(last_block, timestamp)
     nonce = 0
     hash = crypto_hash(timestamp, last_hash, data, difficulty, nonce)
 
-    while hash[0:difficulty] != '0' * difficulty:
+    while hex_to_binary(hash)[0:difficulty] != '0' * difficulty:
       nonce += 1
       timestamp = time.time_ns()
+      difficulty = Block.adjust_difficulty(last_block, timestamp)
       hash = crypto_hash(timestamp, last_hash, data, difficulty, nonce)
 
 
@@ -70,12 +82,68 @@ class Block:
     # )
 
     return Block(**GENESIS_DATA)
+
+  @staticmethod
+  def adjust_difficulty(last_block, new_timestamp):
+    """
+    Calculate the adjusted difficulty based on the MINE_RATE.
+    difficulty adjusted upwards if > than MINE_RATE
+    difficulty adjusted downwards if < than MINE_RATE
+    """
+
+    if (new_timestamp - last_block.timestamp) < MINE_RATE:
+      return last_block.difficulty + 1
+
+    if (last_block.difficulty - 1 ) > 0:
+      return last_block.difficulty - 1
+
+    return 1
+
+  @staticmethod
+  def is_valid_block(last_block, block):
+    """
+    Validate block by enforcing the folowing rules:
+    - the block must have the proper last_hash reference
+    - the block must meet the proof of work requirement
+    - the difficulty must only adjust by 1
+    - the block hash must be a valid combination of the block fields
+    """
+
+    if block.last_hash != last_block.hash:
+      raise Exception('The block last_hash must be correct')
+
+
+    if hex_to_binary(block.hash)[0:block.difficulty] != '0' * block.difficulty:
+      raise Exception('The proof of work requirement was not met')
+
+    if abs(last_block.difficulty - block.difficulty) > 1:
+      raise Exception('The block difficulty can only adjust by 1')
+
+    reconstructed_hash = crypto_hash(
+      block.timestamp,
+      block.last_hash,
+      block.data,
+      block.nonce,
+      block.difficulty
+    )
+
+    if block.hash != reconstructed_hash:
+      raise Exception('The block hash must be correct')
+
+
+  
+
+ 
   
 def main():
- genesis_block = Block.genesis()
- block = Block.mine_block(genesis_block, 'foo')
- print(block)
+  genesis_block = Block.genesis()
+  bad_block = Block.mine_block(genesis_block, 'foo')
+  bad_block.last_hash = 'evil_data'
 
+  try:
+    Block.is_valid_block(genesis_block, bad_block)
+  except Exception as e: 
+    print(f'is_valid_block: {e}')
 
 
 if __name__ == '__main__':
