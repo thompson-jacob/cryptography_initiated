@@ -87,21 +87,47 @@
 
 # array_mesh_two(["a", "b", "c", "d"])
 
-
 # The following hash table represents a particular person: { firstName: "Ada", lastName: "Lovelace", email: "ada.lovelace@email.com" }
 # Write a function that accepts this type of hash table and returns the person's email address.
-
-
 
 # The following hash table represents the inventory of shirts for a clothing store: { red: 500, blue: 615, green: 484, yellow: 332 }
 # Write a function that accepts a hash table like this and adds 200 shirts to the "yellow" category. The function can then return the updated hash table.
 
+# def hash_function(hash, _new_color, _num_shirts)
+#   sum = hash.select(:+) { |hash| hash.values}
+#   sum
+# end
+# my_hash = { red: 500, blue: 615, green: 484, yellow: 332 }
+# color = :turquoise
+# num = 543
+# p hash_function(my_hash, color, num)
 
-def hash_function(hash, _new_color, _num_shirts)
-  sum = hash.select(:+) { |hash| hash.values}
-  sum
-end
-my_hash = { red: 500, blue: 615, green: 484, yellow: 332 }
-color = :turquoise
-num = 543
-p hash_function(my_hash, color, num)
+# Input:
+
+# Output:
+# [2, 3, 1, 2, 2, 1, 5, 2, 2]
+
+# def skip_it(arr)
+#   i = 0
+#   skipped_arr = []
+#   while i < arr.length
+#     skip = arr[i]
+#     skipped_arr << arr[i]
+#     i += skip
+#   end
+#   return skipped_arr
+# end
+
+# arr = [2, 1, 3, 2, 5, 1, 2, 6, 2, 7, 1, 5, 6, 3, 2, 6, 2, 1, 2]
+# p skip_it(arr)
+
+# def frequency(string)
+# letter_counts = {}
+# i = 0
+#   while i < string.length
+
+
+#     i += 1
+# end
+
+# p frequency("peter piper picked a patch of pickeled peppers")

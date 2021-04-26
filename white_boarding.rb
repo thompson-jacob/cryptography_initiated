@@ -1,0 +1,53 @@
+# Given an array of numbers, return true if the array is a "100 Coolio Array", or false if it is not.
+
+# A "100 Coolio Array" meets the following criteria:
+
+# Its first and last numbers add up to 100,
+# Its second and second-to-last numbers add up to 100,
+# Its third and third-to-last numbers add up to 100,
+# and so on and so forth.
+
+# Here are examples of 100 Coolio Arrays:
+
+# [1, 2, 3, 97, 98, 99]
+# [90, 20, 70, 100, 30, 80, 10]
+
+# Input: [2,4,6,94,96,98]
+# Output: true
+
+# Input: [3,4,67,5,4,2]
+# Output: false
+
+# Input: [100]
+# Output: true
+
+# arr[-1]
+
+# [1,2,3,100,97,98,99]
+#         i
+#         j
+
+# -----------------------
+def coolio_array(arr)
+  i = 0
+  j = arr.length - 1
+
+  while i <= j
+    p i
+    p j
+
+    if i == j
+      if arr[i] != 100
+        return "false 1"
+      end
+    elsif arr[i] + arr[j] != 100
+      return "false 2"
+    end
+    i += 1
+    j -= 1
+  end
+
+  return "true"
+end
+
+p coolio_array([1, 2, 3, 100, 97, 8, 99])
